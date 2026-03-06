@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PrismaX Scramble Game</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#0f172a;
+color:white;
+text-align:center;
+padding:40px;
+}
+
+.container{
+max-width:500px;
+margin:auto;
+background:#1e293b;
+padding:30px;
+border-radius:10px;
+box-shadow:0 0 20px rgba(0,0,0,0.5);
+}
+
+h1{
+margin-bottom:10px;
+}
+
+#scrambleWord{
+font-size:32px;
+letter-spacing:5px;
+margin:20px 0;
+}
+
+input{
+padding:10px;
+width:70%;
+font-size:16px;
+}
+
+button{
+padding:10px 20px;
+margin:10px;
+border:none;
+border-radius:6px;
+background:#22c55e;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#16a34a;
+}
+
+#result{
+margin-top:15px;
+font-weight:bold;
+font-size:18px;
+}
+
+#score{
+margin-top:10px;
+font-size:20px;
+color:#facc15;
+}
+
+#timer{
+margin-top:10px;
+font-size:18px;
+color:#38bdf8;
+}
+
+.correct{
+animation:pop 0.4s ease;
+}
+
+@keyframes pop{
+0%{transform:scale(1)}
+50%{transform:scale(1.2)}
+100%{transform:scale(1)}
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>PrismaX Scramble Game</h1>
+<p>Unscramble the word related to PrismaX</p>
+
+<div id="timer">Time: 10</div>
+<div id="score">Score: 0</div>
+
+<h2 id="scrambleWord"></h2>
+
+<input id="guess" placeholder="Type your answer">
+
+<br>
+
+<button onclick="checkAnswer()">Submit</button>
+<button onclick="newWord()">New Word</button>
+
+<p id="result"></p>
+
+</div>
+
+<audio id="correctSound">
+<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_9b1b0c66b7.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="wrongSound">
+<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_4c1c0a3d2a.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+
+const words=[
+"robot",
+"teleoperation",
+"dataset",
+"operator",
+"training",
+"ai",
+"machine",
+"control",
+"sensor",
+"network"
+];
+
+let currentWord="";
+let score=0;
+let time=10;
+let timer;
+
+function scramble(word){
+
+let letters=word.split("");
+
+for(let i=letters.length-1;i>0;i--){
+
+let j=Math.floor(Math.random()*(i+1));
+
+[letters[i],letters[j]]=[letters[j],letters[i]];
+
+}
+
+return letters.join("");
+
+}
+
+function startTimer(){
+
+clearInterval(timer);
+
+time=10;
+
+document.getElementById("timer").innerText="Time: "+time;
+
+timer=setInterval(function(){
+
+time--;
+
+document.getElementById("timer").innerText="Time: "+time;
+
+if(time<=0){
+
+clearInterval(timer);
+
+document.getElementById("result").innerText="⏰ Time's up!";
+
+document.getElementById("wrongSound").play();
+
+setTimeout(newWord,1500);
+
+}
+
+},1000);
+
+}
+
+function newWord(){
+
+clearInterval(timer);
+
+currentWord=words[Math.floor(Math.random()*words.length)];
+
+let scrambled=scramble(currentWord);
+
+document.getElementById("scrambleWord").innerText=scrambled;
+
+document.getElementById("guess").value="";
+
+document.getElementById("result").innerText="";
+
+startTimer();
+
+}
+
+function checkAnswer(){
+
+let guess=document.getElementById("guess").value.toLowerCase();
+
+if(guess===currentWord){
+
+score+=10;
+
+document.getElementById("score").innerText="Score: "+score;
+
+document.getElementById("result").innerText="🎉 Correct!";
+
+document.getElementById("correctSound").play();
+
+document.getElementById("scrambleWord").classList.add("correct");
+
+setTimeout(()=>{
+document.getElementById("scrambleWord").classList.remove("correct");
+newWord();
+},1000);
+
+}
+
+else{
+
+document.getElementById("result").innerText="❌ Try again";
+
+document.getElementById("wrongSound").play();
+
+}
+
+}
+
+newWord();
+
+</script>
+
+</body>
+</html>
