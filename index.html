@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PrismaX Scramble Game</title>
+
+<style>
+
+body{
+font-family: Arial;
+background:#0f172a;
+color:white;
+text-align:center;
+padding:40px;
+}
+
+.container{
+max-width:500px;
+margin:auto;
+background:#1e293b;
+padding:30px;
+border-radius:10px;
+}
+
+button{
+padding:10px 20px;
+margin-top:10px;
+border:none;
+background:#22c55e;
+color:white;
+font-size:16px;
+cursor:pointer;
+border-radius:5px;
+}
+
+input{
+padding:10px;
+width:70%;
+margin-top:10px;
+}
+
+#result{
+margin-top:15px;
+font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>PrismaX Scramble Game</h1>
+
+<p>Unscramble the word related to PrismaX</p>
+
+<h2 id="scrambleWord"></h2>
+
+<input id="guess" placeholder="Type your answer">
+
+<br>
+
+<button onclick="checkAnswer()">Submit</button>
+
+<button onclick="newWord()">New Word</button>
+
+<p id="result"></p>
+
+</div>
+
+<script>
+
+const words = [
+"robot",
+"teleoperation",
+"ai",
+"data",
+"prisma",
+"machine",
+"training",
+"network"
+];
+
+let currentWord="";
+let scrambled="";
+
+function scramble(word){
+
+let letters=word.split('');
+
+for(let i=letters.length-1;i>0;i--){
+
+let j=Math.floor(Math.random()*(i+1));
+
+[letters[i],letters[j]]=[letters[j],letters[i]];
+
+}
+
+return letters.join('');
+
+}
+
+function newWord(){
+
+currentWord=words[Math.floor(Math.random()*words.length)];
+
+scrambled=scramble(currentWord);
+
+document.getElementById("scrambleWord").innerText=scrambled;
+
+document.getElementById("result").innerText="";
+
+document.getElementById("guess").value="";
+
+}
+
+function checkAnswer(){
+
+let guess=document.getElementById("guess").value.toLowerCase();
+
+if(guess===currentWord){
+
+document.getElementById("result").innerText="✅ Correct!";
+
+}
+
+else{
+
+document.getElementById("result").innerText="❌ Try again";
+
+}
+
+}
+
+newWord();
+
+</script>
+
+</body>
+
+</html>
